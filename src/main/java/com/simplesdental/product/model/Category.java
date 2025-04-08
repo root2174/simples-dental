@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -19,9 +20,11 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "O nome da categoria é obrigatório e não pode estar em branco.")
+    @Size(max = 100, message = "O nome da categoria deve ter no máximo 100 caracteres.")
     private String name;
 
+    @Size(max = 255, message = "A descrição da categoria deve ter no máximo 255 caracteres.")
     private String description;
 
     @OneToMany(mappedBy = "category")

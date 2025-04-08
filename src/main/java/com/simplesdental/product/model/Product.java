@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 @Entity
@@ -23,19 +24,25 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O nome do produto é obrigatório e não pode estar em branco.")
+    @Size(max = 100, message = "O nome do produto deve ter no máximo 100 caracteres.")
     private String name;
 
+    @Size(max = 255, message = "A descrição do produto deve ter no máximo 255 caracteres.")
     private String description;
 
+    @NotNull(message = "O preço do produto é obrigatório.")
+    @Positive(message = "O preço do produto deve ser maior que zero.")
     private BigDecimal price;
 
-    @NotNull
+    @NotNull(message = "O status do produto é obrigatório.")
     private Boolean status;
 
     private String code;
-    
+
+    @NotNull(message = "A categoria do produto é obrigatória.")
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     @JsonIgnoreProperties({"products"})
     private Category category;
 

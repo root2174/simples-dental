@@ -1,6 +1,6 @@
 # Desafio Backend - Requisitos
 
-## 1. Validações
+## 1. Validações [X]
 
 Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo: 
 
@@ -13,10 +13,10 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 - `Category.description` é opcional e pode ter no máximo 255 caracteres.
 
 ## 2. Otimização de Performance
-- Analisar consultas para identificar possíveis gargalos.
-- Utilizar índices e restrições de unicidade quando necessário.
-- Implementar paginação nos endpoints para garantir a escala conforme o volume de dados crescer.
-- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados.
+- Analisar consultas para identificar possíveis gargalos. [realizar no final]
+- Utilizar índices e restrições de unicidade quando necessário. [realizar no final]
+- Implementar paginação nos endpoints para garantir a escala conforme o volume de dados crescer. [X]
+- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados. [realizar no final]
 
 ## 3. Logging
 - Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON).

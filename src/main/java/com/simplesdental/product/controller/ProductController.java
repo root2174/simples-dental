@@ -5,6 +5,8 @@ import com.simplesdental.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +27,8 @@ public class ProductController {
 
     @GetMapping
     @Transactional
-    public List<Product> getAllProducts() {
-        List<Product> products = productService.findAll();
+    public Page<Product> getAllProducts(Pageable pageable) {
+        Page<Product> products = productService.findAll(pageable);
         products.forEach(product -> {
             if (product.getCategory() != null) {
                 Hibernate.initialize(product.getCategory());
