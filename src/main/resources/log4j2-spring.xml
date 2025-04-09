@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Properties>
+    <Property name="LOG_DIR">logs</Property>
+  </Properties>
+
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p [%t] %c{1} - %m%n"/>
+    </Console>
+
+    <RollingFile name="RollingFile" fileName="${LOG_DIR}/application.log"
+      filePattern="${LOG_DIR}/archive/application-%d{yyyy-MM-dd}-%i.log.gz">
+      <JsonLayout eventEol="true" compact="true" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="10MB"/>
+      </Policies>
+      <DefaultRolloverStrategy max="30"/>
+    </RollingFile>
+
+    <Async name="Async">
+      <AppenderRef ref="RollingFile"/>
+      <AppenderRef ref="Console"/>
+    </Async>
+  </Appenders>
+
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="Async"/>
+    </Root>
+    <Logger name="com.simplesdental" level="DEBUG" additivity="false">
+      <AppenderRef ref="Async"/>
+    </Logger>
+  </Loggers>
+</Configuration>

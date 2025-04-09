@@ -19,17 +19,17 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 - Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados. [realizar no final]
 
 ## 3. Logging
-- Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON).
-- Implementar níveis de log: DEBUG, INFO, WARNING, ERROR, CRITICAL.
-- Utilizar logging assíncrono.
-- Definir estratégias de retenção e compressão dos logs.
+- Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON). [X]
+- Implementar níveis de log: DEBUG, INFO, WARNING, ERROR, CRITICAL. [X]
+- Utilizar logging assíncrono. [X]
+- Definir estratégias de retenção e compressão dos logs. [X]
 
 ## 4. Refatoração
 - Atualizar a entidade `Product`:
-  - Alterar o atributo `code` para o tipo inteiro.
+  - Alterar o atributo `code` para o tipo inteiro. [X]
 - Versionamento da API:
   - Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`.
-  - Criar uma nova versão (v2) em `/api/v2/products` onde `code` é inteiro.
+  - Criar uma versão (v2) em `/api/v2/products` onde `code` é inteiro.
 
 ## 5. Integração com Swagger
 - Documentar todos os endpoints com:
