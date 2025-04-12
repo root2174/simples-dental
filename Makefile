@@ -1,4 +1,4 @@
-.PHONY: build up down logs clean
+.PHONY: build up
 
 build:
 	@echo "Building application and Docker images..."
