@@ -65,7 +65,6 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 
 O que falta:
 - Testes
-- Logar mais
 - Errors
 ---
 

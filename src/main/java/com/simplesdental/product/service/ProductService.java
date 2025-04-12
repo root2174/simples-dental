@@ -4,18 +4,18 @@ import com.simplesdental.product.controller.dto.product.v1.CreateProductDTO;
 import com.simplesdental.product.controller.dto.product.v1.UpdateProductDTO;
 import com.simplesdental.product.controller.dto.product.v2.CreateProductV2DTO;
 import com.simplesdental.product.controller.dto.product.v2.UpdateProductV2DTO;
+import com.simplesdental.product.logging.LoggerWrapper;
 import com.simplesdental.product.model.Product;
 import com.simplesdental.product.repository.CategoryRepository;
 import com.simplesdental.product.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -23,19 +23,34 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final LoggerWrapper logger = new LoggerWrapper(ProductService.class);
 
     public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        logger.info("Retrieving all products");
+        try {
+            Page<Product> products = productRepository.findAll(pageable);
+            logger.info("Successfully retrieved {} products", products.getTotalElements());
+            return products;
+        } catch (Exception e) {
+            logger.error("Error retrieving products: {}", e.getMessage());
+            throw e;
+        }
     }
 
     public Optional<Product> findById(Long id) {
-        return productRepository.findById(id);
+        logger.info("Retrieving product with id: {}", id);
+        try {
+            return productRepository.findById(id);
+        } catch (Exception e) {
+            logger.error("Error retrieving product with id {}: {}", id, e.getMessage());
+            throw e;
+        }
     }
-
 
     @SneakyThrows
     @Transactional
     public Product save(CreateProductV2DTO input) {
+        logger.info("Saving new product: {}", input.name());
         var category = categoryRepository.findById(input.categoryId()).orElse(null);
 
         if (category == null) {
@@ -52,19 +67,35 @@ public class ProductService {
                 .category(category)
                 .build();
 
-        return productRepository.save(product);
+        try {
+            Product savedProduct = productRepository.save(product);
+            logger.info("Product saved successfully with id: {}", savedProduct.getId());
+            return savedProduct;
+        } catch (Exception e) {
+            logger.error("Error saving product {}: {}", input.name(), e.getMessage());
+            throw e;
+        }
     }
 
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        logger.info("Deleting product with id: {}", id);
+        try {
+            productRepository.deleteById(id);
+            logger.info("Product deleted successfully with id: {}", id);
+        } catch (Exception e) {
+            logger.error("Error deleting product with id {}: {}", id, e.getMessage());
+            throw e;
+        }
     }
 
     @SneakyThrows
     @Transactional
     public UpdateProductV2DTO update(Long id, @Valid UpdateProductV2DTO input) {
+        logger.info("Updating product with id: {}", id);
         var product = findById(id);
 
         if (product.isEmpty()) {
+            logger.warn("product with id: {} not found", id);
             throw new ClassNotFoundException("Produto não encontrado.");
         }
 
@@ -74,6 +105,7 @@ public class ProductService {
             category = categoryRepository.findById(input.categoryId()).orElse(null);
 
             if (category == null) {
+                logger.warn("category with id {} not found.", input.categoryId());
                 throw new ClassNotFoundException("Categoria não encontrada.");
             }
         }
@@ -89,11 +121,11 @@ public class ProductService {
             .status(savedProduct.getStatus())
             .code(savedProduct.getCode())
             .build();
-
     }
 
     @Transactional
     public UpdateProductDTO update(Long id, @Valid UpdateProductDTO input) {
+        logger.info("Updating product with id: {}", id);
         var code = getCodeAsInteger(input.code());
 
         var updatedProduct = this.update(id,
@@ -117,22 +149,9 @@ public class ProductService {
             .build();
     }
 
-
-        @SneakyThrows
-    private Integer getCodeAsInteger(String code) {
-        if (code == null) {
-            return null;
-        }
-
-        if (!code.matches("^PROD-\\d+$")) {
-            throw new IllegalAccessException("Produto não possui o código no formato esperado. ex: PROD-001");
-        }
-
-        return Integer.parseInt(code.replaceAll("\\D", ""));
-    }
-
     @Transactional
     public Product save(@Valid CreateProductDTO input) {
+        logger.info("Saving new product: {}", input.name());
         var code = getCodeAsInteger(input.code());
 
         return this.save(new CreateProductV2DTO(
@@ -142,5 +161,19 @@ public class ProductService {
             input.status(),
             code,
             input.categoryId()));
+    }
+
+    @SneakyThrows
+    private Integer getCodeAsInteger(String code) {
+        if (code == null) {
+            return null;
+        }
+
+        if (!code.matches("^PROD-\\d+$")) {
+            logger.warn("Invalid code: {}", code);
+            throw new IllegalAccessException("Produto não possui o código no formato esperado. ex: PROD-001");
+        }
+
+        return Integer.parseInt(code.replaceAll("\\D", ""));
     }
 }
