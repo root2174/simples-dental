@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Category Management", description = "APIs for managing categories.")
@@ -38,7 +39,7 @@ public class CategoryController {
                 schema = @Schema(implementation = Page.class))),
         @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping
     public Page<Category> getAllCategories(Pageable pageable) {
         return categoryService.findAll(pageable);
@@ -53,6 +54,7 @@ public class CategoryController {
                 schema = @Schema(implementation = Category.class))),
         @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
     })
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @GetMapping("/{id}")
     public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
         return categoryService.findById(id)
@@ -73,6 +75,7 @@ public class CategoryController {
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public Category createCategory(@Valid @RequestBody Category category) {
         return categoryService.save(category);
     }
@@ -88,6 +91,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "404", description = "Category not found", content = @Content),
         @ApiResponse(responseCode = "400", description = "Invalid input data", content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @Valid @RequestBody Category category) {
         return categoryService.findById(id)
@@ -106,6 +110,7 @@ public class CategoryController {
         @ApiResponse(responseCode = "204", description = "Category deleted successfully", content = @Content),
         @ApiResponse(responseCode = "404", description = "Category not found", content = @Content)
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         return categoryService.findById(id)

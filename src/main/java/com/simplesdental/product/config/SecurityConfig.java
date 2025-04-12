@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,6 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -29,22 +31,14 @@ public class SecurityConfig {
   protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> {
-          // Public endpoints
-          auth.requestMatchers("/api/v1/auth/**").permitAll();
-          auth.requestMatchers("/api/v2/auth/**").permitAll();
-          auth.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll();
-
           // Product endpoints
           auth.requestMatchers("/api/v1/products/**", "/api/v2/products/**").authenticated();
 
           // Category endpoints
-          auth.requestMatchers("/api/v1/categories/**", "/api/v2/categories/**").authenticated();
-
-          // User endpoints
-          auth.requestMatchers("/api/v1/users/**", "/api/v2/users/**").authenticated();
+          auth.requestMatchers("/api/categories/**").authenticated();
 
           // All other requests need authentication
-          auth.anyRequest().authenticated();
+          auth.anyRequest().permitAll();
         })
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

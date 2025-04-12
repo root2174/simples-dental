@@ -16,7 +16,7 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 - Analisar consultas para identificar possíveis gargalos. [realizar no final]
 - Utilizar índices e restrições de unicidade quando necessário. [realizar no final]
 - Implementar paginação nos endpoints para garantir a escala conforme o volume de dados crescer. [X]
-- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados. [realizar no final]
+- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados. [X]
 
 ## 3. Logging
 - Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON). [X]
@@ -25,26 +25,26 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 - Definir estratégias de retenção e compressão dos logs. [X]
 
 ## 4. Refatoração
-- Atualizar a entidade `Product`:
+- Atualizar a entidade `Product`: [X]
   - Alterar o atributo `code` para o tipo inteiro. [X]
 - Versionamento da API:
-  - Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`.
-  - Criar uma versão (v2) em `/api/v2/products` onde `code` é inteiro.
+  - Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`. [X]
+  - Criar uma versão (v2) em `/api/v2/products` onde `code` é inteiro. [X]
 
 ## 5. Integração com Swagger
 - Documentar todos os endpoints com:
-  - Descrições detalhadas.
-  - Exemplos de JSON para requisições e respostas.
-  - Listagem de códigos HTTP e mensagens de erro.
+  - Descrições detalhadas. [X]
+  - Exemplos de JSON para requisições e respostas. [X]
+  - Listagem de códigos HTTP e mensagens de erro. [X]
 
 ## 6. Autenticação e Gerenciamento de Usuários
-- Criar a tabela `users` com as colunas:
+- Criar a tabela `users` com as colunas: [X]
   - `id` (chave primária com incremento automático)
   - `name` (obrigatório)
   - `email` (obrigatório, único e com formato válido)
   - `password` (obrigatório)
   - `role` (obrigatório e com valores permitidos: `admin` ou `user`)
-- Inserir um usuário admin inicial:
+- Inserir um usuário admin inicial: [X]
   - Email: `contato@simplesdental.com`
   - Password: `KMbT%5wT*R!46i@@YHqx`
 - Endpoints:
@@ -53,7 +53,7 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
   - `GET /auth/context` - Retorna `id`, `email` e `role` do usuário autenticado.
   - `PUT /users/password` - Atualiza a senha do usuário autenticado.
 
-## 7. Permissões e Controle de Acesso
+## 7. Permissões e Controle de Acesso [X]
 - Usuários com `role` admin podem criar, alterar, consultar e excluir produtos, categorias e outros usuários.
 - Usuários com `role` user podem:
   - Consultar produtos e categorias.
@@ -63,6 +63,10 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 ## 8. Testes
 - Desenvolver testes unitários para os módulos de autenticação, autorização e operações CRUD.
 
+O que falta:
+- Testes
+- Logar mais
+- Errors
 ---
 
 # Perguntas

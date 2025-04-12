@@ -17,6 +17,7 @@ import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,7 @@ public class ProductV2Controller {
       @ApiResponse(responseCode = "500", description = "Erro Interno")
   })
   @PostMapping
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> createProduct(@Valid @RequestBody CreateProductV2DTO input,
       UriComponentsBuilder uriBuilder) {
     logger.info("Creating a product with name {}", input.name());
@@ -70,6 +72,7 @@ public class ProductV2Controller {
       @ApiResponse(responseCode = "404", description = "Product not found", content = @Content),
       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
   })
+  @PreAuthorize("hasRole('ADMIN')")
   @PutMapping("/{id}")
   public ResponseEntity<UpdateProductV2DTO> updateProduct(@PathVariable Long id, @Valid @RequestBody UpdateProductV2DTO input) {
     logger.info("Updating product with id {}", id);
@@ -89,6 +92,7 @@ public class ProductV2Controller {
       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
   })
   @GetMapping
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
     logger.info("Getting all products...");
     Page<Product> products = productService.findAll(pageable);
@@ -112,6 +116,7 @@ public class ProductV2Controller {
       @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
     logger.info("Getting product with id {}", id);
     return productService.findById(id)
@@ -133,6 +138,7 @@ public class ProductV2Controller {
       @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
     logger.info("Deleting product with id {}", id);
     return productService.findById(id)

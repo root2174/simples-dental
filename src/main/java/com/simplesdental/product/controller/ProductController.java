@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +48,7 @@ public class ProductController {
   })
   @GetMapping
   @Transactional
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Page<Product>> getAllProducts(Pageable pageable) {
       Page<Product> products = productService.findAll(pageable);
       products.forEach(product -> {
@@ -69,6 +71,7 @@ public class ProductController {
       @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
   @GetMapping("/{id}")
+  @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
   public ResponseEntity<Product> getProductById(@PathVariable Long id) {
       return productService.findById(id)
           .map(product -> {
@@ -90,6 +93,7 @@ public class ProductController {
   })
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<String> createProduct(@Valid @RequestBody CreateProductDTO input,
       UriComponentsBuilder uriBuilder) {
     var savedProduct = productService.save(input);
@@ -114,6 +118,7 @@ public class ProductController {
       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
   })
   @PutMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<UpdateProductDTO> updateProduct(@PathVariable Long id, @Valid @RequestBody UpdateProductDTO product) {
       var updatedProduct = productService.update(id, product);
       return ResponseEntity.ok(updatedProduct);
@@ -128,6 +133,7 @@ public class ProductController {
       @ApiResponse(responseCode = "404", description = "Product not found", content = @Content)
   })
   @DeleteMapping("/{id}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
       return productService.findById(id)
               .map(product -> {

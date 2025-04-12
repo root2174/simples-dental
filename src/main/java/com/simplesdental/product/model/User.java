@@ -1,9 +1,9 @@
 package com.simplesdental.product.model;
 
+import com.simplesdental.product.model.converters.UserRoleConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,22 +32,27 @@ public class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false, unique = true)
-  private String username;
-
   @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false)
+  private String name;
 
   @Column(nullable = false, unique = true)
   private String email;
 
   @Column(nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Convert(converter = UserRoleConverter.class)
   private UserRole role;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+  }
+
+  @Override
+  public String getUsername() {
+    return email;
   }
 
   @Override
