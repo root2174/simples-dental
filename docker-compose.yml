@@ -7,6 +7,7 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/produto
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_REDIS_HOST=redis
     depends_on:
       db:
         condition: service_healthy
