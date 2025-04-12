@@ -4,6 +4,8 @@ import com.simplesdental.product.controller.dto.product.v1.CreateProductDTO;
 import com.simplesdental.product.controller.dto.product.v1.UpdateProductDTO;
 import com.simplesdental.product.controller.dto.product.v2.CreateProductV2DTO;
 import com.simplesdental.product.controller.dto.product.v2.UpdateProductV2DTO;
+import com.simplesdental.product.exception.BusinessException;
+import com.simplesdental.product.exception.ResourceNotFoundException;
 import com.simplesdental.product.logging.LoggerWrapper;
 import com.simplesdental.product.model.Product;
 import com.simplesdental.product.repository.CategoryRepository;
@@ -54,7 +56,7 @@ public class ProductService {
         var category = categoryRepository.findById(input.categoryId()).orElse(null);
 
         if (category == null) {
-            throw new ClassNotFoundException("A categoria informada não existe.");
+            throw new ResourceNotFoundException("A categoria informada não existe.");
         }
 
         var product =
@@ -96,7 +98,7 @@ public class ProductService {
 
         if (product.isEmpty()) {
             logger.warn("product with id: {} not found", id);
-            throw new ClassNotFoundException("Produto não encontrado.");
+            throw new ResourceNotFoundException("Produto não encontrado.");
         }
 
         var category = product.get().getCategory();
@@ -106,7 +108,7 @@ public class ProductService {
 
             if (category == null) {
                 logger.warn("category with id {} not found.", input.categoryId());
-                throw new ClassNotFoundException("Categoria não encontrada.");
+                throw new ResourceNotFoundException("Categoria não encontrada.");
             }
         }
 
@@ -120,6 +122,7 @@ public class ProductService {
             .price(savedProduct.getPrice())
             .status(savedProduct.getStatus())
             .code(savedProduct.getCode())
+            .categoryId(savedProduct.getCategory().getId())
             .build();
     }
 
@@ -171,7 +174,7 @@ public class ProductService {
 
         if (!code.matches("^PROD-\\d+$")) {
             logger.warn("Invalid code: {}", code);
-            throw new IllegalAccessException("Produto não possui o código no formato esperado. ex: PROD-001");
+            throw new BusinessException("Produto não possui o código no formato esperado. ex: PROD-001");
         }
 
         return Integer.parseInt(code.replaceAll("\\D", ""));

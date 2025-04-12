@@ -1,6 +1,6 @@
 # Desafio Backend - Requisitos
 
-## 1. Validações [X]
+## 1. Validações 
 
 Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo: 
 
@@ -13,38 +13,38 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 - `Category.description` é opcional e pode ter no máximo 255 caracteres.
 
 ## 2. Otimização de Performance
-- Analisar consultas para identificar possíveis gargalos. [realizar no final]
-- Utilizar índices e restrições de unicidade quando necessário. [realizar no final]
-- Implementar paginação nos endpoints para garantir a escala conforme o volume de dados crescer. [X]
-- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados. [X]
+- Analisar consultas para identificar possíveis gargalos.
+- Utilizar índices e restrições de unicidade quando necessário. 
+- Implementar paginação nos endpoints para garantir a escala conforme o volume de dados crescer.
+- Utilizar cache com `Redis` para o endpoint `/auth/context`, garantindo que a invalidação seja feita em caso de alteração dos dados.
 
 ## 3. Logging
-- Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON). [X]
-- Implementar níveis de log: DEBUG, INFO, WARNING, ERROR, CRITICAL. [X]
-- Utilizar logging assíncrono. [X]
-- Definir estratégias de retenção e compressão dos logs. [X]
+- Registrar logs em arquivos utilizando um formato estruturado (ex.: JSON). 
+- Implementar níveis de log: DEBUG, INFO, WARNING, ERROR, CRITICAL. 
+- Utilizar logging assíncrono. 
+- Definir estratégias de retenção e compressão dos logs. 
 
 ## 4. Refatoração
-- Atualizar a entidade `Product`: [X]
-  - Alterar o atributo `code` para o tipo inteiro. [X]
+- Atualizar a entidade `Product`: 
+  - Alterar o atributo `code` para o tipo inteiro. 
 - Versionamento da API:
-  - Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`. [X]
-  - Criar uma versão (v2) em `/api/v2/products` onde `code` é inteiro. [X]
+  - Manter o endpoint atual (v1) em `/api/products` com os códigos iniciados por `PROD-`. 
+  - Criar uma versão (v2) em `/api/v2/products` onde `code` é inteiro. 
 
 ## 5. Integração com Swagger
 - Documentar todos os endpoints com:
-  - Descrições detalhadas. [X]
-  - Exemplos de JSON para requisições e respostas. [X]
-  - Listagem de códigos HTTP e mensagens de erro. [X]
+  - Descrições detalhadas. 
+  - Exemplos de JSON para requisições e respostas. 
+  - Listagem de códigos HTTP e mensagens de erro. 
 
 ## 6. Autenticação e Gerenciamento de Usuários
-- Criar a tabela `users` com as colunas: [X]
+- Criar a tabela `users` com as colunas: 
   - `id` (chave primária com incremento automático)
   - `name` (obrigatório)
   - `email` (obrigatório, único e com formato válido)
   - `password` (obrigatório)
   - `role` (obrigatório e com valores permitidos: `admin` ou `user`)
-- Inserir um usuário admin inicial: [X]
+- Inserir um usuário admin inicial: 
   - Email: `contato@simplesdental.com`
   - Password: `KMbT%5wT*R!46i@@YHqx`
 - Endpoints:
@@ -53,7 +53,7 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
   - `GET /auth/context` - Retorna `id`, `email` e `role` do usuário autenticado.
   - `PUT /users/password` - Atualiza a senha do usuário autenticado.
 
-## 7. Permissões e Controle de Acesso [X]
+## 7. Permissões e Controle de Acesso 
 - Usuários com `role` admin podem criar, alterar, consultar e excluir produtos, categorias e outros usuários.
 - Usuários com `role` user podem:
   - Consultar produtos e categorias.
@@ -62,10 +62,6 @@ Você deve ajustar as entidades (model e sql) de acordo com as regras abaixo:
 
 ## 8. Testes
 - Desenvolver testes unitários para os módulos de autenticação, autorização e operações CRUD.
-
-O que falta:
-- Testes
-- Errors
 ---
 
 # Perguntas
