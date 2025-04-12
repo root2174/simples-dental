@@ -1,5 +1,7 @@
 package com.simplesdental.product.service;
 
+import com.simplesdental.product.exception.BusinessException;
+import com.simplesdental.product.exception.ResourceNotFoundException;
 import com.simplesdental.product.logging.LoggerWrapper;
 import com.simplesdental.product.model.Category;
 import com.simplesdental.product.repository.CategoryRepository;
@@ -24,7 +26,7 @@ public class CategoryService {
             return categories;
         } catch (Exception e) {
             logger.error("Error retrieving categories: {}", e.getMessage());
-            throw e;
+            throw new BusinessException("Error retrieving categories", e);
         }
     }
 
@@ -34,11 +36,13 @@ public class CategoryService {
             return categoryRepository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Category not found with id: {}", id);
-                    return new RuntimeException("Category not found");
+                    return new ResourceNotFoundException("Category", "id", id);
                 });
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("Error retrieving category with id {}: {}", id, e.getMessage());
-            throw e;
+            throw new BusinessException("Error retrieving category", e);
         }
     }
 
@@ -50,18 +54,24 @@ public class CategoryService {
             return savedCategory;
         } catch (Exception e) {
             logger.error("Error saving category {}: {}", category.getName(), e.getMessage());
-            throw e;
+            throw new BusinessException("Error saving category", e);
         }
     }
 
     public void deleteById(Long id) {
         logger.info("Deleting category with id: {}", id);
         try {
+            if (!categoryRepository.existsById(id)) {
+                logger.warn("Category not found with id: {}", id);
+                throw new ResourceNotFoundException("Category", "id", id);
+            }
             categoryRepository.deleteById(id);
             logger.info("Category deleted successfully with id: {}", id);
+        } catch (ResourceNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             logger.error("Error deleting category with id {}: {}", id, e.getMessage());
-            throw e;
+            throw new BusinessException("Error deleting category", e);
         }
     }
 }
